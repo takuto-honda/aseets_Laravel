@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ContactForm;
+use App\Services\CheckFormService;
+use App\Http\Requests\StoreContactRequest;
+use App\Http\Requests\UpdateContactRequest;
 
 class ContactFormController extends Controller
 {
@@ -12,11 +15,23 @@ class ContactFormController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //表示するカラムを指定
-        $contacts = ContactForm::select('id', 'name', 'title', 'created_at')
-        ->get();
+        // $contacts = ContactForm::select('id', 'name', 'title', 'created_at')
+        // ->get();
+
+        // ページネーション対応
+        // $contacts = ContactForm::select('id', 'name', 'title', 'created_at')
+        // ->paginate(20);
+
+        //検索対応
+        $search = $request->search;
+        $query = ContactForm::search($search);
+
+        $contacts = $query->select('id', 'name', 'title', 'created_at')
+        ->paginate(20);
+
         //上記変数をcompact('変数名')で指定し値も一緒にreturnする
         return view('contacts.index', compact('contacts'));
     }
@@ -37,7 +52,7 @@ class ContactFormController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreContactRequest $request)
     {
         // dd($request, $request->name);
 
@@ -62,7 +77,11 @@ class ContactFormController extends Controller
     {
         $contact = ContactForm::find($id);
 
-        return view('contacts.show', compact('contact'));
+        $gender = CheckFormService::checkGender($contact);
+        $age = CheckFormService::checkAge($contact);
+
+
+        return view('contacts.show', compact('contact', 'gender', 'age'));
     }
 
     /**
@@ -85,7 +104,7 @@ class ContactFormController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateContactRequest $request, $id)
     {
         $contact = ContactForm::find($id);
         $contact->name = $request->name;

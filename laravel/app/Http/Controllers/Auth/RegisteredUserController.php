@@ -30,12 +30,14 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        //バリデーション
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        //保存 モデル::create(['キー' => 'バリュー']);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,

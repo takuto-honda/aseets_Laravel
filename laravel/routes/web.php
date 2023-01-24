@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ContactFormController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
@@ -18,6 +19,7 @@ use Tests\TestCase;
 */
 
 Route::get('tests/test', [TestController::class, 'index']);
+Route::get('shops', [ShopController::class, 'index']);
 
 //RestFulで書く場合
 // Route::resource('contacts', ContactFormController::class)->middleware(['auth']);

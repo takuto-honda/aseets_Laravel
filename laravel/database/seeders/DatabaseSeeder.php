@@ -17,6 +17,15 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TestSeeder::class,
             UserSeeder::class,
+            //親クラス
+            AreaSeeder::class,
+            //子クラス
+            ShopSeeder::class,
+
+
+            RouteSeeder::class,
+            // 中間テーブル
+            RouteShopSeeder::class,
         ]);
 
         //ダミーデータの件数
